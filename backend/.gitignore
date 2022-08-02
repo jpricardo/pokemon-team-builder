@@ -25,6 +25,7 @@ yarn-error.log*
 
 #env
 .env
+firebase_creds.json
 
 #artifacts
 *.js

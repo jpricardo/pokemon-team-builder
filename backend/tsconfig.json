@@ -4,6 +4,7 @@
     "target": "esnext",
     "rootDir": "./",
     "esModuleInterop": true,
+    "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,

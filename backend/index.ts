@@ -1,38 +1,33 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
+import apiRouter from './api.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT ?? 3000;
 
-const mockTeams = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
-
-app.use(express.json());
-
+// Middleware
 app.use((req, res, next) => {
 	console.log(`${new Date().toLocaleString()} - ${req.ip} ${req.path} ${res.statusCode}`);
 	next();
 });
 
-app.get('/', (req, res) => {
-	res.send('Salve!');
-});
+app.use(express.json());
+app.use('/api', apiRouter);
 
-app.get('/team', (req, res) => {
-	res.send(mockTeams);
-});
-
-app.get('/team/:id', (req, res, next) => {
-	const team = mockTeams.find((team) => team.id == parseInt(req.params.id));
-	if (team) {
-		res.send(team);
-	} else {
-		next();
-	}
-});
-
+// 404 Response
 app.get('*', (req, res) => {
 	res.send({ error: 'Page not found!' }).status(404);
 });
 
+// Error Handler
+const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+	console.error(err.stack);
+	res.status(500).send({ error: 'Something went wrong!' });
+};
+app.use(errorHandler);
+
+// Listen to connections
 app.listen(port, () => {
 	console.log(`[🌞] Server is UP and RUNNING on port ${port}`);
 });
