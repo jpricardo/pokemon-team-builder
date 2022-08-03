@@ -7,6 +7,7 @@ import ThemedCard from './ThemedCard';
 
 import axios from 'axios';
 import { IPokemonData, ISpeciesData } from './Types';
+import styles from './TeamPokemonCard.module.css';
 
 type Props = { data: IPokemonData; onClick?: (name: string) => void; removeItem?: (pokemonIndex: number) => void; index: number };
 const TeamPokemonCard: React.FC<Props> = (props) => {
@@ -37,7 +38,7 @@ const TeamPokemonCard: React.FC<Props> = (props) => {
 	const cardTitle = (
 		<Row className='justify-content-end'>
 			<Col lg={2} md={2} sm={2} xs={2}>
-				<Button onClick={handleDelete} variant='danger' size='sm'>
+				<Button className={styles.deleteButton} onClick={handleDelete} variant='danger' size='sm'>
 					X
 				</Button>
 			</Col>
