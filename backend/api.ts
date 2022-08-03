@@ -28,8 +28,13 @@ const validateTeamsBody = (req: Request, res: Response, next: NextFunction) => {
 apiRouter
 	.route('/teams')
 	.get(async (req, res) => {
-		const teams = (await teamsDb.get()).docs.map((team) => team.data());
-		res.send(teams);
+		if (req.query.id) {
+			const teams = (await teamsDb.where('owner', '==', req.query.id).get()).docs.map((team) => team.data());
+			res.send(teams);
+		} else {
+			const teams = (await teamsDb.get()).docs.map((team) => team.data());
+			res.send(teams);
+		}
 	})
 	.post(validateTeamsBody, async (req: Request, res: Response) => {
 		const newTeam = await teamsDb.doc();

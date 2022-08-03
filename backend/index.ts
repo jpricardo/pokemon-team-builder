@@ -1,6 +1,8 @@
 import express, { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
 import apiRouter from './api.js';
 import dotenv from 'dotenv';
+import cors from 'cors';
+
 dotenv.config();
 
 const app = express();
@@ -8,9 +10,16 @@ const port = process.env.PORT ?? 3000;
 
 // Middleware
 app.use((req, res, next) => {
-	console.log(`${new Date().toLocaleString()} - ${req.ip} ${req.path} ${res.statusCode}`);
+	console.log(`${new Date().toLocaleString()} - ${req.method} ${req.ip} ${req.path} ${res.statusCode}`);
 	next();
 });
+
+const allowedOrigins = ['http://localhost:3000'];
+
+const corsOption: cors.CorsOptions = {
+	origin: allowedOrigins,
+};
+app.use(cors(corsOption));
 
 app.use(express.json());
 app.use('/api', apiRouter);
