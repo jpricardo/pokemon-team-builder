@@ -1,14 +1,20 @@
 import express, { Request, Response, NextFunction } from 'express';
 import admin from 'firebase-admin';
-import fs from 'fs';
+import dotenv from 'dotenv';
+dotenv.config();
 
-try {
-	const credsFile = fs.readFileSync('firebase_creds.json').toString();
-	const serviceAccount = JSON.parse(credsFile);
-	admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
-} catch (e) {
-	throw new Error('Please provide your Firebase credentials!');
-}
+// try {
+// 	const credsFile = fs.readFileSync('firebase_creds.json').toString();
+// 	const serviceAccount = JSON.parse(credsFile);
+// } catch (e) {
+// 	throw new Error('Please provide your Firebase credentials!');
+// }
+
+const firebaseCreds = process.env.BASE_64_FIREBASE_CREDENTIALS;
+if (!firebaseCreds) throw new Error('Firebase credentials are missing!');
+
+const serviceAccount = JSON.parse(Buffer.from(firebaseCreds, 'base64').toString());
+admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
 
 const db = admin.firestore();
 const teamsDb = db.collection('teams');
@@ -38,7 +44,7 @@ apiRouter
 		}
 	})
 	.post(validateTeamsBody, async (req: Request, res: Response) => {
-		const newTeam = await teamsDb.doc();
+		const newTeam = teamsDb.doc();
 		newTeam.set({ ...req.body, id: newTeam.id });
 		res.status(201).send({ status: 'OK', id: newTeam.id });
 	});

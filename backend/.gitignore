@@ -29,3 +29,5 @@ firebase_creds.json
 
 #artifacts
 *.js
+
+*.json
