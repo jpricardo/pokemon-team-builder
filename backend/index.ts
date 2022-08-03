@@ -14,7 +14,7 @@ app.use((req, res, next) => {
 	next();
 });
 
-const allowedOrigins = ['https://pokemon-team-builder-1a601.web.app'];
+const allowedOrigins = ['https://pokemon-team-builder-1a601.web.app', 'http://localhost:3000'];
 
 const corsOption: cors.CorsOptions = {
 	origin: allowedOrigins,
