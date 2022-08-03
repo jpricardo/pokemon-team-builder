@@ -14,7 +14,7 @@ const PokemonPicker = (props: { allPokemon: Array<IPokemonData>; addPokemon: any
 	const [searchQuery, setSearchQuery] = useState('');
 	const handleClick = (name: string) => {
 		props.addPokemon(name);
-		props.nextStep();
+		// props.nextStep();
 	};
 	return (
 		<>

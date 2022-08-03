@@ -105,7 +105,7 @@ export default (props: { items: Array<any>; onClick?: any; removeItem?: any }) =
 	return (
 		<Row>
 			{props.items.map((item) => (
-				<Col className='my-2' lg={6} key={item.name}>
+				<Col className='my-1' lg={6} key={item.name}>
 					<AddPokemonCard onClick={props.onClick} data={item} removeItem={props.removeItem} />
 				</Col>
 			))}

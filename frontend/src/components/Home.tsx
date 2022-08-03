@@ -6,16 +6,15 @@ import Col from 'react-bootstrap/Col';
 
 import Button from 'react-bootstrap/Button';
 
-import Modal from 'react-bootstrap/Modal';
-
 import TeamPokemonList from './TeamPokemonList';
 import AddPokemonModal from './AddPokemonModal';
 
-import { IPokemonData, IPokemonRequestResponse } from './Types';
+import { IPokemonData, IPokemonRequestResponse, ITeamData } from './Types';
 import axios from 'axios';
 
-export default () => {
+const Home: React.FC<any> = (props) => {
 	const [allPokemon, setAllPokemon] = useState<IPokemonData[]>([]);
+	const pokemonTeam = props.team?.pokemon;
 
 	useEffect(() => {
 		getAllPokemon();
@@ -33,41 +32,34 @@ export default () => {
 			});
 	};
 
-	const [pokemonTeam, setPokemonTeam] = useState<IPokemonData[]>([]);
 	const getPokemonByName = (name: string) => allPokemon.find((pokemon) => pokemon.name === name);
 
 	const addPokemon = (name: string) => {
-		const newPokemon = getPokemonByName(name);
-		if (newPokemon) {
-			setPokemonTeam([...pokemonTeam, newPokemon]);
-			// closeModal();
+		const foundPokemon = getPokemonByName(name);
+		if (foundPokemon) {
+			const newPokemon = { ...foundPokemon, customName: foundPokemon.name, lvl: 100 };
+			props.addPokemon(newPokemon);
+			closeModal();
 		}
 	};
-	const removePokemon = (name: string) => setPokemonTeam((oldValue) => oldValue.filter((item) => item.name !== name));
+	const removePokemon = (name: string) => {
+		// setPokemonTeam((oldValue) => oldValue.filter((item) => item.name !== name));
+	};
 
 	const [showModal, setShowModal] = useState(false);
 	const openModal = () => setShowModal(true);
 	const closeModal = () => setShowModal(false);
 
-	const getTeamCards = () => {
-		if (pokemonTeam.length > 0) {
-			return pokemonTeam.map((item) => {
-				<p>{item?.name}</p>;
-			});
-		}
-		return <p>Cringe</p>;
-	};
-
 	return (
 		<div className='mx-2'>
 			<Row className='mb-2'>
 				<Col>
-					<TeamPokemonList items={pokemonTeam} removeItem={removePokemon} />
+					<TeamPokemonList items={pokemonTeam ?? []} removeItem={removePokemon} />
 				</Col>
 			</Row>
 			<Row className='mb-2'>
 				<Col>
-					{pokemonTeam.length < 6 ? (
+					{!pokemonTeam || pokemonTeam.length < 6 ? (
 						<Button variant='primary' onClick={openModal}>
 							+ Add Pokemon
 						</Button>
@@ -82,3 +74,5 @@ export default () => {
 		</div>
 	);
 };
+
+export default Home;

@@ -1,6 +1,8 @@
 export interface IPokemonData {
 	name: string;
 	url: string;
+	customName?: string;
+	lvl?: number;
 }
 
 export interface ITypesData {
@@ -13,7 +15,6 @@ export interface ISpritesData {
 	back_default: string;
 }
 
-
 export interface ISpeciesData {
 	name: string;
 	url: string;
@@ -21,12 +22,12 @@ export interface ISpeciesData {
 	sprites: ISpritesData;
 }
 
-export interface IPokemonTeamMember {
-	name: string;
-	url: string
-	lvl: number;
+export interface IPokemonRequestResponse {
+	results: Array<IPokemonData>;
 }
 
-export interface IPokemonRequestResponse {
-	results: Array<IPokemonData>
+export interface ITeamData {
+	owner?: string;
+	id?: string;
+	pokemon?: Array<IPokemonData>;
 }
