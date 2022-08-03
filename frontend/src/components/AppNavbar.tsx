@@ -13,7 +13,7 @@ const AppNavbar: React.FC<Props> = (props) => {
 			<Container className='justify-content-between'>
 				<Navbar.Brand>
 					<img className='mx-2' src={pokeball} height={25} width={25} />
-					Pokemon Team Builder
+					Team Builder
 				</Navbar.Brand>
 				{props.user ? (
 					<Button size='sm' variant='secondary' onClick={props.logout}>
