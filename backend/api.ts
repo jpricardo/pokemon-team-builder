@@ -28,8 +28,9 @@ const validateTeamsBody = (req: Request, res: Response, next: NextFunction) => {
 apiRouter
 	.route('/teams')
 	.get(async (req, res) => {
-		if (req.query.id) {
-			const teams = (await teamsDb.where('owner', '==', req.query.id).get()).docs.map((team) => team.data());
+		const { owner } = req.query;
+		if (owner) {
+			const teams = (await teamsDb.where('owner', '==', owner).get()).docs.map((team) => team.data());
 			res.send(teams);
 		} else {
 			const teams = (await teamsDb.get()).docs.map((team) => team.data());
