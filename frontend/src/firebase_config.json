@@ -1,5 +1,9 @@
 {
-    "config": "do",
-    "firebase": "deve",
-    "estar": "aqui"
+    "apiKey": "AIzaSyC-X0KBFFuBnGljVJzSiaFWUGrHu1h55Pg",
+    "authDomain": "pokemon-team-builder-1a601.firebaseapp.com",
+    "projectId": "pokemon-team-builder-1a601",
+    "storageBucket": "pokemon-team-builder-1a601.appspot.com",
+    "messagingSenderId": "1054463891219",
+    "appId": "1:1054463891219:web:665c2c0648a6bfa78d2ce6",
+    "measurementId": "G-4RMGYXN1F0"
 }

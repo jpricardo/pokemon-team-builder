@@ -1,6 +1,7 @@
 import { ITypesData } from './Types';
 
-export default (props: { data: ITypesData }) => {
+type Props = { data: ITypesData };
+const PokemonTypesBadge: React.FC<Props> = (props) => {
 	const typeColors = {
 		normal: { background: '#AEAD7D', text: 'black' },
 		fighting: { background: '#c13029', text: 'black' },
@@ -37,3 +38,5 @@ export default (props: { data: ITypesData }) => {
 		</span>
 	);
 };
+
+export default PokemonTypesBadge;

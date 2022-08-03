@@ -1,51 +1,18 @@
 import { useState } from 'react';
 
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import Stack from 'react-bootstrap/Stack';
+import { Modal } from 'react-bootstrap';
 
-import Modal from 'react-bootstrap/Modal';
+import PokemonPicker from './PokemonPicker';
 
-import AddPokemonList from './AddPokemonList';
 import { IPokemonData } from './Types';
 
-const PokemonPicker = (props: { allPokemon: Array<IPokemonData>; addPokemon: any; nextStep: any }) => {
-	const [searchQuery, setSearchQuery] = useState('');
-	const handleClick = (name: string) => {
-		props.addPokemon(name);
-		// props.nextStep();
-	};
-	return (
-		<>
-			<Form onSubmit={(e) => e.preventDefault()}>
-				<Row>
-					<Col className='mb-2'>
-						<Form.Control
-							type='search'
-							placeholder='Type Here...'
-							value={searchQuery}
-							onChange={(e) => setSearchQuery(e.target.value.toUpperCase())}
-							required
-						/>
-					</Col>
-				</Row>
-			</Form>
-			<Row>
-				<Col>
-					<AddPokemonList onClick={handleClick} items={props.allPokemon.filter((pokemon) => searchQuery.length > 2 && pokemon.name.includes(searchQuery))} />
-				</Col>
-			</Row>
-		</>
-	);
-};
-
-export default (props: { allPokemon: Array<IPokemonData>; show: boolean; handleClose: any; addPokemon: any }) => {
+type Props = { show: boolean; allPokemon: Array<IPokemonData>; handleClose: () => void; addPokemon: (name: string) => void };
+const AddPokemonModal: React.FC<Props> = (props) => {
 	const [step, setStep] = useState(0);
 	const nextStep = () => setStep((prevValue) => prevValue + 1);
 	const prevStep = () => setStep((prevValue) => prevValue - 1);
 
-	const formSteps = [<PokemonPicker allPokemon={props.allPokemon} addPokemon={props.addPokemon} nextStep={nextStep} />];
+	const formSteps = [<PokemonPicker allPokemon={props.allPokemon} addPokemon={props.addPokemon} nextStep={nextStep} prevStep={prevStep} />];
 
 	return (
 		<Modal show={props.show} onHide={props.handleClose}>
@@ -56,3 +23,5 @@ export default (props: { allPokemon: Array<IPokemonData>; show: boolean; handleC
 		</Modal>
 	);
 };
+
+export default AddPokemonModal;

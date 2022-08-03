@@ -1,0 +1,12 @@
+.card {
+  background-color: #fff;
+}
+
+.header { 
+  color: #fff; 
+  background-color: #DD3931 
+}
+
+.hover:hover {
+  background-color:#eee;
+}

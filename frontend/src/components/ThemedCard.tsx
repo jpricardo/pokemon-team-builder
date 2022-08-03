@@ -1,12 +1,15 @@
 import Card from 'react-bootstrap/Card';
 
-const ThemedCard: React.FC<any> = (props) => {
+import styles from './ThemedCard.module.css';
+
+type Props = { title: React.ReactNode | string; children: React.ReactNode; hover?: boolean | undefined };
+const ThemedCard: React.FC<Props> = (props) => {
 	return (
-		<Card className='border border-dark rounded-top shadow my-4'>
-			<Card.Header style={{ color: 'white', backgroundColor: '#DD3931' }}>
+		<Card className={'border border-dark rounded-top shadow my-1 mx-1' + styles.card}>
+			<Card.Header className={styles.header}>
 				<Card.Title>{props.title}</Card.Title>
 			</Card.Header>
-			<Card.Body>{props.children}</Card.Body>
+			<Card.Body className={props.hover ? styles.hover : ''}>{props.children}</Card.Body>
 		</Card>
 	);
 };

@@ -1,26 +1,23 @@
 import { useEffect, useState } from 'react';
 
-import { getAuth, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { getFirestore, query, getDocs, collection, where, addDoc, DocumentData } from 'firebase/firestore';
-import { useAuthState } from 'react-firebase-hooks/auth';
 import { initializeApp } from 'firebase/app';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
+import { addDoc, collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
-import axios from 'axios';
+import { Button, Container } from 'react-bootstrap';
 
-import Container from 'react-bootstrap/Container';
-import Navbar from 'react-bootstrap/Navbar';
-import Button from 'react-bootstrap/Button';
-
+import AppFooter from './components/AppFooter';
+import AppNavbar from './components/AppNavbar';
 import Home from './components/Home';
 import ThemedCard from './components/ThemedCard';
 
-import { IPokemonData, ITeamData } from './components/Types';
-
-import firebaseConfig from './firebase_config.json';
+import axios from 'axios';
 import './App.css';
-import pokeball from './pokeball.png';
+import { IPokemonData, ITeamData } from './components/Types';
+import firebaseConfig from './firebase_config.json';
 
-function App() {
+const App: React.FC = () => {
 	const app = initializeApp(firebaseConfig);
 	// Auth
 	const auth = getAuth(app);
@@ -38,7 +35,7 @@ function App() {
 	useEffect(() => {
 		const fetchData = async () => {
 			if (user) {
-				const team = await getTeamByUser(user.uid).then((res) => res.data[0]);
+				const team = await getTeamsByUser(user.uid).then((res) => res.data[0]);
 				if (!team) {
 					const teamId = await createTeam(user.uid).then((res) => res.data.id);
 					const team = await getTeam(teamId).then((res) => res.data);
@@ -53,49 +50,47 @@ function App() {
 	}, [user]);
 
 	const createTeam = async (uid: string) => {
-		if (!apiUrl) {
-			throw new Error('Invalid API URL!');
-		}
-		const payload = { owner: uid, pokemon: [] };
-		return axios.post(apiUrl + '/teams', payload);
+		if (!apiUrl) throw new Error('Invalid API URL!');
+		return axios.post(apiUrl + '/teams', { owner: uid, pokemon: [] });
 	};
 
 	const updateTeam = async (payload: any) => {
-		if (!apiUrl) {
-			throw new Error('Invalid API URL!');
-		}
+		if (!apiUrl) throw new Error('Invalid API URL!');
 		return axios.patch(apiUrl + '/teams/' + payload.id, payload);
 	};
 
-	const getTeamByUser = (uid: string) => {
-		if (!apiUrl) {
-			throw new Error('Invalid API URL!');
-		} else if (!uid) {
-			throw new Error('User ID is missing!');
-		}
+	const getTeamsByUser = (uid: string) => {
+		if (!apiUrl) throw new Error('Invalid API URL!');
+		else if (!uid) throw new Error('User ID is missing!');
 		return axios.get<ITeamData[]>(apiUrl + '/teams' + '?owner=' + uid);
 	};
 
 	const getTeam = (id: string) => {
-		if (!apiUrl) {
-			throw new Error('Invalid API URL!');
-		} else if (!id) {
-			throw new Error('Resource ID is missing!');
-		}
+		if (!apiUrl) throw new Error('Invalid API URL!');
+		else if (!id) throw new Error('Resource ID is missing!');
 		return axios.get<ITeamData>(apiUrl + '/teams/' + id);
 	};
 
 	const addPokemon = (pokemonData: IPokemonData) => {
-		if (!team?.pokemon) {
-			return;
-		}
+		if (!team?.pokemon) return;
 		const newPokemonArray = team.pokemon.map((item) => item);
 		newPokemonArray.push(pokemonData);
 		setTeam((prevValue) => {
 			const newTeam = { ...prevValue, pokemon: newPokemonArray };
-			const update = async () => {
-				updateTeam(newTeam).then((res) => console.log(res.data));
-			};
+			const update = async () => updateTeam(newTeam).then((res) => console.log(res.data));
+			update();
+			return newTeam;
+		});
+	};
+
+	const removePokemon = (pokemonIndex: number) => {
+		if (!team?.pokemon || team.pokemon.length === 0) return;
+
+		const newPokemonArray = team.pokemon.filter((item, index) => index !== pokemonIndex);
+		setTeam((prevValue) => {
+			const newTeam = { ...prevValue, pokemon: newPokemonArray };
+			const update = async () => updateTeam(newTeam).then((res) => console.log(res.data));
+
 			update();
 			return newTeam;
 		});
@@ -120,37 +115,19 @@ function App() {
 		}
 	};
 
-	const logout = () => {
-		signOut(auth);
-	};
+	const logout = () => signOut(auth);
 
 	return (
 		<>
-			<Navbar bg='dark' expand='lg'>
-				<Container className='justify-content-between px-4'>
-					<Navbar.Brand>
-						<img src={pokeball} height={25} width={25} />
-					</Navbar.Brand>
-					{user ? (
-						<Button size='sm' variant='secondary' onClick={logout}>
-							Logout
-						</Button>
-					) : null}
-				</Container>
-			</Navbar>
-			<Container className='text-center'>
-				{user ? (
-					<ThemedCard title={<h2 className='m-2'>{user.displayName}'s Team</h2>}>
-						<Home logout={logout} team={team} addPokemon={addPokemon} />
-					</ThemedCard>
-				) : (
-					<ThemedCard title={<h2 className='m-2'>Please Sign In!</h2>}>
-						<Button onClick={googleSignIn}>Sign In</Button>
-					</ThemedCard>
-				)}
+			<AppNavbar user={user} logout={logout} />
+			<Container className='text-center mt-3'>
+				<ThemedCard title={<h2 className='m-2'>{user && team ? `${user.displayName}'s Team` : 'Please Sign in!'}</h2>}>
+					{user && team ? <Home team={team} addPokemon={addPokemon} removePokemon={removePokemon} /> : <Button onClick={googleSignIn}>Sign In</Button>}
+				</ThemedCard>
 			</Container>
+			<AppFooter />
 		</>
 	);
-}
+};
 
 export default App;
