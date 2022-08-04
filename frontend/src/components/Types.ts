@@ -29,5 +29,5 @@ export interface IPokemonRequestResponse {
 export interface ITeamData {
 	owner?: string;
 	id?: string;
-	pokemon?: Array<IPokemonData>;
+	pokemon: Array<IPokemonData>;
 }

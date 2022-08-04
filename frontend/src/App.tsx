@@ -5,7 +5,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/
 import { addDoc, collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
-import { Button, Container } from 'react-bootstrap';
+import { Button, Container, Spinner } from 'react-bootstrap';
 
 import AppFooter from './components/AppFooter';
 import AppNavbar from './components/AppNavbar';
@@ -117,13 +117,19 @@ const App: React.FC = () => {
 
 	const logout = () => signOut(auth);
 
+	const getContent = () => {
+		if (user) {
+			if (team) return <Home team={team} addPokemon={addPokemon} removePokemon={removePokemon} />;
+			return <Spinner style={{ height: '98px', width: '98px' }} animation='grow' role='status' />;
+		}
+		return <Button onClick={googleSignIn}>Sign In</Button>;
+	};
+
 	return (
 		<>
 			<AppNavbar user={user} logout={logout} />
 			<Container className='text-center mt-3'>
-				<ThemedCard title={<h2 className='m-2'>{user && team ? `${user.displayName}'s Team` : 'Please Sign in!'}</h2>}>
-					{user && team ? <Home team={team} addPokemon={addPokemon} removePokemon={removePokemon} /> : <Button onClick={googleSignIn}>Sign In</Button>}
-				</ThemedCard>
+				<ThemedCard title={<h2 className='m-2 fs-3'>{user && team ? `${user.displayName}'s Team` : 'Please Sign in!'}</h2>}>{getContent()}</ThemedCard>
 			</Container>
 			<AppFooter />
 		</>

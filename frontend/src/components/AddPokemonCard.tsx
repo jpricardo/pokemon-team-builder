@@ -8,7 +8,7 @@ import PokemonTypesBadge from './PokemonTypesBadge';
 import axios from 'axios';
 import { IPokemonData, ISpeciesData } from './Types';
 
-type Props = { data: IPokemonData; onClick: (name: string) => void };
+type Props = { data: IPokemonData; onClick: (pokemonData: IPokemonData) => void };
 const AddPokemonCard: React.FC<Props> = (props) => {
 	const [pokemonData, setPokemonData] = useState<ISpeciesData>();
 	const [loading, setLoading] = useState(true);
@@ -34,7 +34,7 @@ const AddPokemonCard: React.FC<Props> = (props) => {
 			<Spinner style={{ height: '98px', width: '98px' }} animation='grow' role='status' />
 		);
 
-	const handleClick = () => props.onClick(props.data.name);
+	const handleClick = () => props.onClick(props.data);
 
 	return (
 		<Card className='shadow border border-dark rounded-top' onClick={handleClick}>

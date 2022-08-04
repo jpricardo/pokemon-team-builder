@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { Button, Col, Row } from 'react-bootstrap';
+import { Button, Col, Row, Spinner } from 'react-bootstrap';
 
 import AddPokemonModal from './AddPokemonModal';
 import TeamPokemonList from './TeamPokemonList';
@@ -24,11 +24,8 @@ const Home: React.FC<Props> = (props) => {
 
 	const getPokemonByName = (name: string) => allPokemon.find((pokemon) => pokemon.name === name);
 
-	const addPokemon = (name: string) => {
-		const foundPokemon = getPokemonByName(name);
-		if (!foundPokemon) return;
-		const newPokemon = { ...foundPokemon, customName: foundPokemon.name, lvl: 100 };
-		props.addPokemon(newPokemon);
+	const addPokemon = (pokemonData: IPokemonData) => {
+		props.addPokemon(pokemonData);
 		closeModal();
 	};
 
@@ -46,7 +43,7 @@ const Home: React.FC<Props> = (props) => {
 			</Row>
 			<Row className='mb-2'>
 				<Col>
-					{pokemonTeam && pokemonTeam.length < 6 ? (
+					{pokemonTeam.length < 6 ? (
 						<Button variant='primary' onClick={openModal}>
 							+ Add Pokemon
 						</Button>

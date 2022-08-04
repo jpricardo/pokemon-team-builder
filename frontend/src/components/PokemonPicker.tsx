@@ -6,12 +6,17 @@ import AddPokemonList from './AddPokemonList';
 
 import { IPokemonData } from './Types';
 
-type Props = { allPokemon: Array<IPokemonData>; addPokemon: (name: string) => void; nextStep: () => void; prevStep: () => void };
+type Props = {
+	allPokemon: Array<IPokemonData>;
+	nextStep: () => void;
+	prevStep: () => void;
+	setPokemonData: React.Dispatch<React.SetStateAction<IPokemonData | undefined>>;
+};
 const PokemonPicker: React.FC<Props> = (props) => {
 	const [searchQuery, setSearchQuery] = useState('');
-	const handleClick = (name: string) => {
-		props.addPokemon(name);
-		// props.nextStep();
+	const handleClick = (pokemonData: IPokemonData) => {
+		props.setPokemonData(pokemonData);
+		props.nextStep();
 	};
 	return (
 		<>

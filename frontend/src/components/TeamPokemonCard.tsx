@@ -55,11 +55,22 @@ const TeamPokemonCard: React.FC<Props> = (props) => {
 					</Row>
 				</Col>
 				<Col className='d-flex flex-column justify-content-center'>
+					{props.data.customName && props.data.customName !== props.data.name ? (
+						<>
+							<Row className='mb-0'>
+								<span className='text-capitalize me-auto'>{props.data.customName}</span>
+							</Row>
+							<Row className='mb-2'>
+								<small className='text-capitalize me-auto text-muted'>({props.data.name.split('-').join(' ')})</small>
+							</Row>
+						</>
+					) : (
+						<Row className='mb-2'>
+							<span className='text-capitalize me-auto'>{props.data.name.split('-').join(' ')}</span>
+						</Row>
+					)}
 					<Row className='mb-2'>
-						<span className='text-capitalize me-auto'>{props.data.name.split('-').join(' ')}</span>
-					</Row>
-					<Row className='mb-2'>
-						<span className='small'>lvl. 100</span>
+						<span className='small'>lvl.{props.data.lvl}</span>
 					</Row>
 					<Row className='mb-2'>
 						{loading

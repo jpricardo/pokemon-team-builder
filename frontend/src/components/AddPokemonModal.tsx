@@ -3,16 +3,27 @@ import { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 
 import PokemonPicker from './PokemonPicker';
+import PokemonForm from './PokemonForm';
 
 import { IPokemonData } from './Types';
 
-type Props = { show: boolean; allPokemon: Array<IPokemonData>; handleClose: () => void; addPokemon: (name: string) => void };
+type Props = { show: boolean; allPokemon: Array<IPokemonData>; handleClose: () => void; addPokemon: (pokemonData: IPokemonData) => void };
 const AddPokemonModal: React.FC<Props> = (props) => {
 	const [step, setStep] = useState(0);
+	const [pokemonData, setPokemonData] = useState<IPokemonData>();
+
 	const nextStep = () => setStep((prevValue) => prevValue + 1);
 	const prevStep = () => setStep((prevValue) => prevValue - 1);
 
-	const formSteps = [<PokemonPicker allPokemon={props.allPokemon} addPokemon={props.addPokemon} nextStep={nextStep} prevStep={prevStep} />];
+	const handleClose = () => {
+		setStep(0);
+		props.handleClose();
+	};
+
+	const formSteps = [
+		<PokemonPicker allPokemon={props.allPokemon} nextStep={nextStep} prevStep={prevStep} setPokemonData={setPokemonData} />,
+		<PokemonForm pokemonData={pokemonData} addPokemon={props.addPokemon} nextStep={nextStep} prevStep={prevStep} closeModal={handleClose} />,
+	];
 
 	return (
 		<Modal show={props.show} onHide={props.handleClose}>
