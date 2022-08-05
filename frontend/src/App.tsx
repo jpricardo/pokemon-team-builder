@@ -129,7 +129,7 @@ const App: React.FC = () => {
 		<>
 			<AppNavbar user={user} logout={logout} />
 			<Container className='text-center mt-3'>
-				<ThemedCard title={<h2 className='m-2 fs-3'>{user && team ? `${user.displayName}'s Team` : 'Please Sign in!'}</h2>}>{getContent()}</ThemedCard>
+				<ThemedCard title={<h2 className='fs-3 m-0 p-1'>{user && team ? `${user.displayName}'s Team` : 'Please Sign in!'}</h2>}>{getContent()}</ThemedCard>
 			</Container>
 			<AppFooter />
 		</>
